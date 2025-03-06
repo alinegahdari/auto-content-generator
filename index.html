@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محتوا‌ساز خودکار</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>محتوا‌ساز خودکار</h1>
+    <input type="text" id="prompt" placeholder="موضوع را وارد کنید">
+    <button onclick="generateContent()">تولید محتوا</button>
+    <p id="output"></p>
+
+    <script>
+        async function generateContent() {
+            const prompt = document.getElementById('prompt').value;
+            const outputElement = document.getElementById('output');
+
+            // نمایش پیام "در حال تولید..."
+            outputElement.innerText = "در حال تولید محتوا...";
+
+            // فراخوانی API (مثال با Hugging Face)
+            try {
+                const response = await fetch('https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-125M', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_HUGGING_FACE_TOKEN'
+                    },
+                    body: JSON.stringify({ inputs: prompt })
+                });
+
+                const data = await response.json();
+                outputElement.innerText = data[0]?.generated_text || "خطا در تولید محتوا!";
+            } catch (error) {
+                outputElement.innerText = "خطا در ارتباط با سرور!";
+            }
+        }
+    </script>
+</body>
+</html>
